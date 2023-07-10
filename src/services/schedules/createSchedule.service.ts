@@ -1,17 +1,12 @@
+import { Schedule } from "../../entities";
 import { AppError } from "../../error";
-import {
-  TSchedules,
-  TSchedulesRequest,
-  TSchedulesResponse,
-} from "../../interfaces";
+import { TSchedulesRequest } from "../../interfaces";
 import { schedulesRepo } from "../../repositories";
-import { schedulesSchemaResponse } from "../../schemas";
 
 const createSchedulesService = async (
   payload: TSchedulesRequest,
   userId: number
-): Promise<TSchedules> => {
-  let user = userId;
+): Promise<Schedule> => {
   let day = payload.date;
 
   let newData = new Date(day);
@@ -35,10 +30,7 @@ const createSchedulesService = async (
 
   await schedulesRepo.save(createSchedule);
 
-  const scheduleResult: TSchedulesResponse =
-    schedulesSchemaResponse.parse(createSchedule);
-
-  return scheduleResult;
+  return createSchedule;
 };
 
 export default createSchedulesService;

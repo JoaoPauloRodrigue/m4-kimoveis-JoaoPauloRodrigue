@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { TSchedulesRequest, TSchedulesResponse } from "../../interfaces";
+import { TSchedulesRequest } from "../../interfaces";
 import {
   createSchedulesService,
   propertyVisitAppointmentsService,
@@ -12,10 +12,7 @@ const createSchedulesController = async (
   const payload: TSchedulesRequest = req.body;
   const userId: number = Number(res.locals.id);
 
-  const createNewSchedule: TSchedulesResponse = await createSchedulesService(
-    payload,
-    userId
-  );
+  const createNewSchedule = await createSchedulesService(payload, userId);
   return res.status(201).json(createNewSchedule);
 };
 

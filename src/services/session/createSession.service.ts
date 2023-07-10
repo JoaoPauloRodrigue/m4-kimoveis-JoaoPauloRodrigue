@@ -35,7 +35,7 @@ const createSessionTokenService = async (
     },
     process.env.SECRET_KEY!,
     {
-      expiresIn: "24h",
+      expiresIn: process.env.EXPIRES_IN!,
       subject: String(userData.id),
     }
   );

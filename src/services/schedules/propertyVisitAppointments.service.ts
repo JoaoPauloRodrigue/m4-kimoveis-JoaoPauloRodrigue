@@ -1,30 +1,17 @@
-import { Schedule } from "../../entities";
-import { TSchedules } from "../../interfaces";
-import { realEstateRepo, schedulesRepo, userRepo } from "../../repositories";
-import { schedulesSchemaResponse } from "../../schemas";
+import { RealEstate } from "../../entities";
+import { realEstateRepo } from "../../repositories";
 
 const propertyVisitAppointmentsService = async (
   id: number
-): Promise<TSchedules> => {
-  let listAllPropertyVisit: Schedule[] | undefined;
-
-  let realEstate = await realEstateRepo.findOneBy({
-    id: id,
-  });
-
-  listAllPropertyVisit = await schedulesRepo.find({
-    where: {
-      id: id,
-    },
-    relations: {
-      realEstate: true,
-      user: true,
-    },
-  });
-
-  const schedulesResponse = schedulesSchemaResponse.parse(listAllPropertyVisit);
-
-  return schedulesResponse;
+): Promise<RealEstate[]> => {
+  return await realEstateRepo
+    .createQueryBuilder("re")
+    .leftJoinAndSelect("re.address", "a")
+    .leftJoinAndSelect("re.category", "c")
+    .leftJoinAndSelect("re.schedule", "s")
+    .leftJoinAndSelect("s.user", "u")
+    .where("re.id = :id", { id: id })
+    .getMany();
 };
 
 export default propertyVisitAppointmentsService;
